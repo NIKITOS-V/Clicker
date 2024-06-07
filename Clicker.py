@@ -6,10 +6,10 @@ import os
 
 class Clicker:
     def __init__(self):
-        keyboard.add_hotkey('esc', self.stop_app)
+        keyboard.add_hotkey('esc', self.stop_program)
 
-        self.AppWork = 1
-        self.ClickerWork = 0
+        self.program_is_working = 1
+        self.presser_is_working = 0
 
         self.mainloop(self.input_settings())
 
@@ -20,11 +20,13 @@ class Clicker:
               '\nно может появиться задержка перед выключением кликера или его переходом в режим ожидания.\n'
               'Все значения измеряются в секундах.')
 
+        waiting_time, delay_time = 0.2, 0.002
+
         try:
             while True:
-                CheckTime = float(input("\nЗадержка перед включением кликера: "))
+                waiting_time = float(input("\nЗадержка перед включением кликера: "))
 
-                if 0 <= CheckTime:
+                if 0 <= waiting_time:
                     break
 
         except ValueError:
@@ -32,9 +34,9 @@ class Clicker:
 
         try:
             while True:
-                ClickTime = float(input("\nЗадержка перед кликом: "))
+                delay_time = float(input("\nЗадержка перед кликом: "))
 
-                if 0 <= ClickTime:
+                if 0 <= delay_time:
                     break
 
         except ValueError:
@@ -42,29 +44,33 @@ class Clicker:
 
         try:
             Key = input("\nКнопка активации / деактивации кликера: ")
-            keyboard.add_hotkey(Key, self.start_and_stop_clicker)
+            keyboard.add_hotkey(Key, self.start_and_stop_presser)
 
         except Exception:
             print("\nНедопустимое значение")
 
         print("\nКликер готов")
 
-        return CheckTime, ClickTime
+        return waiting_time, delay_time
 
-    def start_and_stop_clicker(self):
+    def start_and_stop_presser(self):
         os.system('cls' if os.name == 'nt' else 'clear')
-        self.ClickerWork = not self.ClickerWork
-        print('\nАктивно' if self.ClickerWork else '\nОжидание')
 
-    def stop_app(self):
-        self.AppWork = 0
+        self.presser_is_working = not self.presser_is_working
 
-    def mainloop(self, Times):
-        while self.AppWork:
-            time.sleep(Times[0])
-            while self.ClickerWork:
+        print('\nАктивно' if self.presser_is_working else '\nОжидание')
+
+    def stop_program(self):
+        self.program_is_working = 0
+
+    def mainloop(self, times):
+        waiting_time, delay_time = times
+
+        while self.program_is_working:
+            time.sleep(waiting_time)
+            while self.presser_is_working:
                 mouse.click('left')
-                time.sleep(Times[1])
+                time.sleep(delay_time)
 
 
 if __name__ == "__main__":
