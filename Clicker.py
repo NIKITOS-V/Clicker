@@ -2,12 +2,11 @@ import keyboard
 import mouse
 import time
 import os
+from random import randrange
 
 
 class Clicker:
     def __init__(self):
-        keyboard.add_hotkey('esc', self.stop_program)
-
         self.program_is_working = 1
         self.presser_is_working = 0
 
@@ -67,7 +66,7 @@ class Clicker:
         waiting_time, delay_time = times
 
         while self.program_is_working:
-            time.sleep(waiting_time)
+            time.sleep(waiting_time + randrange(0, 100) / 1000)
             while self.presser_is_working:
                 mouse.click('left')
                 time.sleep(delay_time)
